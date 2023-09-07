@@ -13,7 +13,17 @@
         <action
             android:id="@+id/to_save_reminder"
             app:destination="@id/saveReminderFragment" />
+
+        <action
+            android:id="@+id/nav_action_to_authentication"
+            app:destination="@id/authenticationDest" />
     </fragment>
+
+    <activity
+        android:id="@+id/authenticationDest"
+        android:name="com.udacity.project4.authentication.AuthenticationActivity"
+        android:label="AuthenticationActivity"
+        tools:layout="@layout/activity_authentication" />
 
     <fragment
         android:id="@+id/saveReminderFragment"
