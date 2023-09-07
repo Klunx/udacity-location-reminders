@@ -3,8 +3,10 @@ package com.udacity.project4.locationreminders.reminderslist
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
+import com.firebase.ui.auth.AuthUI
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
+import com.udacity.project4.base.BaseViewModel
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentRemindersBinding
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
@@ -22,7 +24,8 @@ class ReminderListFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(inflater,
+        binding = DataBindingUtil.inflate(
+            inflater,
             R.layout.fragment_reminders, container, false
         )
         binding.viewModel = _viewModel
@@ -37,6 +40,7 @@ class ReminderListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this
+        setupObservers()
         setupRecyclerView()
         binding.addReminderFAB.setOnClickListener {
             navigateToAddReminder()
@@ -49,10 +53,24 @@ class ReminderListFragment : BaseFragment() {
         _viewModel.loadReminders()
     }
 
+    private fun setupObservers() {
+        _viewModel.authenticationState.observe(viewLifecycleOwner) { authenticationState ->
+            if (authenticationState != BaseViewModel.AuthenticationState.AUTHENTICATED) {
+                navigateToAuthenticatedPage()
+            }
+        }
+    }
+
     private fun navigateToAddReminder() {
         // Use the navigationCommand live data to navigate between the fragments
         _viewModel.navigationCommand.postValue(
             NavigationCommand.To(ReminderListFragmentDirections.toSaveReminder())
+        )
+    }
+
+    private fun navigateToAuthenticatedPage() {
+        _viewModel.navigationCommand.postValue(
+            NavigationCommand.To(ReminderListFragmentDirections.navActionToAuthentication())
         )
     }
 
@@ -65,7 +83,8 @@ class ReminderListFragment : BaseFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.logout -> {
-                // TODO: add the logout implementation
+                // TODO: add the logout implementation - done
+                AuthUI.getInstance().signOut(requireContext())
             }
         }
         return super.onOptionsItemSelected(item)
@@ -75,5 +94,6 @@ class ReminderListFragment : BaseFragment() {
         super.onCreateOptionsMenu(menu, inflater)
         // Display logout as menu item
         inflater.inflate(R.menu.main_menu, menu)
+
     }
 }

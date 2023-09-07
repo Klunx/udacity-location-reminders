@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_auth"
+    app:startDestination="@id/authenticationFragment">
+
+    <fragment
+        android:id="@+id/authenticationFragment"
+        android:name="com.udacity.project4.authentication.view.AuthenticationFragment"
+        android:label="AuthenticationFragment"
+        tools:layout="@layout/fragment_authentication">
+
+        <action
+            android:id="@+id/nav_action_to_reminder_list"
+            app:destination="@id/remindersDest" />
+    </fragment>
+
+    <activity
+        android:id="@+id/remindersDest"
+        android:name="com.udacity.project4.locationreminders.RemindersActivity"
+        android:label="RemindersActivity"
+        tools:layout="@layout/activity_reminders" />
+</navigation>
