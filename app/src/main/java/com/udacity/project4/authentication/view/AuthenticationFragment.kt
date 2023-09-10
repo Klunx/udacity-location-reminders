@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import com.firebase.ui.auth.AuthMethodPickerLayout
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
@@ -86,11 +87,17 @@ class AuthenticationFragment : BaseFragment() {
             AuthUI.IdpConfig.GoogleBuilder().build()
         )
 
+        val authenticationLayout = AuthMethodPickerLayout.Builder(R.layout.authorization_layout)
+            .setGoogleButtonId(R.id.google_login_button)
+            .setEmailButtonId(R.id.email_login_button)
+            .build()
+
         startActivityForResult(
             AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
                 .setTheme(R.style.AppTheme)
+                .setAuthMethodPickerLayout(authenticationLayout)
                 .build(),
             SIGN_IN_REQUEST_CODE
         )
